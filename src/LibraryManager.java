@@ -32,6 +32,8 @@ public  class LibraryManager{
 
         List<Book> matchingBooks = new ArrayList<>();
 
+        // searches for books by author and adds to matchingBooks
+
         author = author.trim().toLowerCase();
         for (Book b : books){
             if (b.getAuthor().trim().toLowerCase().equals(author)){
@@ -39,6 +41,7 @@ public  class LibraryManager{
             }
         }
 
+        // prints the books by the author (none if no authors found)
 
         if (matchingBooks.isEmpty()){
             System.out.println("No books found by that author.");

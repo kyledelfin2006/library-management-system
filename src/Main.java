@@ -95,7 +95,7 @@ public class Main{
                     scanner.nextLine();
                     validChoice = true;
                 } catch (InputMismatchException e) {
-                    System.out.println("Invalid Input! Enter a number.");
+                    System.out.print("Invalid Input! Enter a number: ");
                     scanner.nextLine();
                 }
             }
