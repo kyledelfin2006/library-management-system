@@ -4,8 +4,7 @@
 ![Status](https://img.shields.io/badge/status-active-success)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-A clean, production-ready library management system in Java
-
+A console-based CRUD application for library management implementing core OOP principles.
 ## ✨ Features
 
 ### Core Functionality
