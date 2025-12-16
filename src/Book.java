@@ -1,5 +1,6 @@
 public class Book {
 
+    // What a book should contain
     private final String title;
     private final String author;
     private final String genre;
@@ -8,11 +9,13 @@ public class Book {
     private static int counter = 0;
 
     Book(String title, String author, String genre, double price) {
+    // Validates user input (title, author, genre, price) before creating the Book object
         validate(title, "Title");
         validate(author, "Author");
         validate(genre, "Genre");
         validate(price, "Price");
 
+    // Assigns when user input is valid
         this.title = title;
         this.author = author;
         this.genre = genre;
@@ -22,17 +25,17 @@ public class Book {
         this.id = String.format("BOOK-%04d", counter);
     }
 
+    // Validates that a String value for a Book field is not null or empty.
     private void validate(String value, String fieldName) {
         if (value == null || value.trim().isEmpty()) {
-            System.out.printf("\nError! %s needed! ", fieldName);
             throw new IllegalArgumentException(fieldName + " cannot be empty or null");
         }
     }
 
+    // Validates that a numeric value (double) for a Book field is greater than 0.
     private void validate(double value, String fieldName) {
         if (value <= 0) {
-            System.out.println("Error! " + fieldName + " must be greater than 0!");
-            throw new IllegalArgumentException(fieldName + " cannot be empty or null");
+            throw new IllegalArgumentException("Error! " + fieldName + " must be greater than 0!");
         }
     }
 
@@ -56,9 +59,10 @@ public class Book {
         return id;
     }
 
-
-    public String toString() {
+ // Overrides when you print a book object
+  @Override  public String toString() {
         return String.format("%-10s %-20s %-15s %-10s %-10.2f",
                 id, title, author, genre, price);
     }
+
 }
