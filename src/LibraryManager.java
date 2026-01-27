@@ -136,8 +136,7 @@ public  class LibraryManager{
             return;
         }
 
-        Book mostExpensive = books.getFirst();
-
+        Book mostExpensive = books.get(0);
         for (Book b : books){
 
             if (b.getPrice() > mostExpensive.getPrice()) {
