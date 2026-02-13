@@ -13,7 +13,7 @@ A console-based library management system built in Java, demonstrating object-or
 
 This Library Management System provides a command-line interface for managing a collection of books. Users can add books, view the collection, search and filter books, and perform various operations like finding the most expensive book or calculating the total library value.
 
-## ✨ Features
+## Features
 
 ### Core Functionality
 - **Add Books**: Add single or multiple books (up to 100 at a time) with automatic ID generation
@@ -32,7 +32,7 @@ This Library Management System provides a command-line interface for managing a 
 - **Separation of Concerns**: Clear architectural layers (UI, Business Logic, Data Model, Validation)
 - **Defensive Programming**: Null-safe operations and boundary checking throughout
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────┐
@@ -88,7 +88,7 @@ javac *.java
 java Main
 ```
 
-## 📖 Usage Guide
+## Usage Guide
 
 ### Main Menu
 ```
@@ -152,7 +152,7 @@ BOOK-0002  The Hobbit                J.R.R. Tolkien       Fantasy         12.50
 BOOK-0001  1984                      George Orwell        Dystopian       15.99
 ```
 
-## 🔍 Code Quality Features
+##  Code Quality Features
 
 ### Input Validation
 - **Multi-layer validation**: Both at UI level and within Book constructor
@@ -172,7 +172,7 @@ BOOK-0001  1984                      George Orwell        Dystopian       15.99
 - **Consistent formatting**: Proper indentation and spacing throughout
 - **Modular design**: Each method has a single, well-defined purpose
 
-## 🎓 Learning Objectives Demonstrated
+##  Learning Objectives Demonstrated
 
 This project showcases understanding of:
 
@@ -204,7 +204,7 @@ This project showcases understanding of:
    - Helpful error messages
    - Input retry mechanisms
 
-## 🛠️ Technical Implementation Details
+##  Technical Implementation Details
 
 ### Book Class (`Book.java`)
 - **Immutable design**: All fields are `final`
@@ -230,7 +230,7 @@ This project showcases understanding of:
 - **Switch statement**: Clean routing to appropriate manager methods
 - **Resource cleanup**: Closes scanner on exit
 
-## 🚧 Potential Enhancements
+## Potential Enhancements
 
 Future features to explore:
 - [ ] Persistent storage (save/load from files or database)
@@ -253,9 +253,9 @@ This is primarily an educational project, but suggestions and feedback are alway
 - Fork and experiment with your own features
 - Share your learning experience
 
-## 📬 Contact
+## Contacts
 
-**Kyle D.** - [@kyledelfin2006](https://github.com/kyledelfin2006)
+- [@kyledelfin2006](https://github.com/kyledelfin2006)
 
 **Project Link**: [https://github.com/kyledelfin2006/library-management-system](https://github.com/kyledelfin2006/library-management-system)
 
