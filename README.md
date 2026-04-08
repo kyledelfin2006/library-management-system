@@ -5,15 +5,15 @@
 ![Status](https://img.shields.io/badge/status-educational-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A console-based library management system built in Java, demonstrating object-oriented programming principles and clean code architecture.
+A console-based library management system built in Java, demonstrating object-oriented programming principles.
 
-> **Educational Project**: This system was developed as a learning exercise to practice OOP concepts, input validation, separation of concerns, and defensive programming techniques.
+> **Educational Project**: This project was developed as a learning exercise to practice OOP concepts, input validation, separation of concerns, and defensive programming techniques.
 
 ## Overview
 
-This Library Management System provides a command-line interface for managing a collection of books. Users can add books, view the collection, search and filter books, and perform various operations like finding the most expensive book or calculating the total library value.
+This L-M-S provides a command-line interface for managing a collection of books. Users can add books, view the collection, search and filter books, and perform various operations like finding the most expensive book or calculating the total library value.
 
-## ✨ Features
+## Features
 
 ### Core Functionality
 - **Add Books**: Add single or multiple books (up to 100 at a time) with automatic ID generation
@@ -25,14 +25,14 @@ This Library Management System provides a command-line interface for managing a 
 - **Most Expensive Book**: Instantly identify the highest-priced book
 - **Total Value**: Calculate the combined value of all books in the library
 
-### Technical Highlights
+### Technical Implementations
 - **Immutable Book Objects**: Books cannot be modified after creation, ensuring data integrity
 - **Multi-Layer Validation**: Input validated at both UI and data model layers
 - **Comprehensive Error Handling**: Graceful handling of invalid inputs with user-friendly retry logic
 - **Separation of Concerns**: Clear architectural layers (UI, Business Logic, Data Model, Validation)
 - **Defensive Programming**: Null-safe operations and boundary checking throughout
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────┐
@@ -56,7 +56,7 @@ This Library Management System provides a command-line interface for managing a 
 └─────────────────────────┘
 ```
 
-### Design Patterns & Principles
+### Design Patterns & Principles learned from Project
 
 **Object-Oriented Principles**:
 - **Encapsulation**: Private fields with public getters, no setters for immutability
@@ -88,7 +88,6 @@ javac *.java
 java Main
 ```
 
-## 📖 Usage Guide
 
 ### Main Menu
 ```
@@ -152,7 +151,7 @@ BOOK-0002  The Hobbit                J.R.R. Tolkien       Fantasy         12.50
 BOOK-0001  1984                      George Orwell        Dystopian       15.99
 ```
 
-## 🔍 Code Quality Features
+##  Code Quality Features (Developer's Favorites)
 
 ### Input Validation
 - **Multi-layer validation**: Both at UI level and within Book constructor
@@ -172,9 +171,7 @@ BOOK-0001  1984                      George Orwell        Dystopian       15.99
 - **Consistent formatting**: Proper indentation and spacing throughout
 - **Modular design**: Each method has a single, well-defined purpose
 
-## 🎓 Learning Objectives Demonstrated
-
-This project showcases understanding of:
+##  Ideas Learned
 
 1. **Object-Oriented Programming**
    - Classes and objects
@@ -204,7 +201,7 @@ This project showcases understanding of:
    - Helpful error messages
    - Input retry mechanisms
 
-## 🛠️ Technical Implementation Details
+##  Technical Implementation Details
 
 ### Book Class (`Book.java`)
 - **Immutable design**: All fields are `final`
@@ -230,7 +227,7 @@ This project showcases understanding of:
 - **Switch statement**: Clean routing to appropriate manager methods
 - **Resource cleanup**: Closes scanner on exit
 
-## 🚧 Potential Enhancements
+## Potential Enhancements
 
 Future features to explore:
 - [ ] Persistent storage (save/load from files or database)
@@ -242,10 +239,6 @@ Future features to explore:
 - [ ] Unit tests with JUnit
 - [ ] Multi-user support with authentication
 
-##  License
-
-This project is licensed under the MIT License - free to use for educational purposes.
-
 ##  Contributing
 
 This is primarily an educational project, but suggestions and feedback are always welcome! Feel free to:
@@ -253,9 +246,9 @@ This is primarily an educational project, but suggestions and feedback are alway
 - Fork and experiment with your own features
 - Share your learning experience
 
-## 📬 Contact
+## Contacts
 
-**Kyle D.** - [@kyledelfin2006](https://github.com/kyledelfin2006)
+- [@kyledelfin2006](https://github.com/kyledelfin2006)
 
 **Project Link**: [https://github.com/kyledelfin2006/library-management-system](https://github.com/kyledelfin2006/library-management-system)
 
