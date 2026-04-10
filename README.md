@@ -1,31 +1,35 @@
 # Library API
 
-> **A REST API built with Java + SparkJava — designed as a hands-on prerequisite before learning Spring Boot.**
+> A REST API built with Java and SparkJava — built as a prerequisite to learning Spring Boot.
 
 ![Java](https://img.shields.io/badge/Java-21+-orange)
 ![SparkJava](https://img.shields.io/badge/SparkJava-2.9.4-red)
+![Jackson](https://img.shields.io/badge/Jackson-2.x-blue)
 ![Status](https://img.shields.io/badge/status-working-brightgreen)
 
 ---
 
-## Why This Project Exists
+## Why I Built This
 
-Before jumping into Spring Boot, you need to understand what a web framework is actually doing for you. This project builds a fully working REST API using **SparkJava** — a minimal framework that makes the fundamentals explicit:
+Before starting Spring Boot, I wanted a solid understanding of what a web framework is actually doing, not just how to use one. 
 
-- How HTTP routes are defined manually
-- How JSON is parsed and returned by hand
-- How request/response cycles work without magic annotations
-- How data is read, stored, and persisted yourself
+Spring Boot abstracts a lot: routing, JSON parsing, request/response handling, error management, dependency injection. That's powerful, but if i jump straight into it without understanding the foundations, you end up copying annotations without knowing what problem they solve.
 
-Once you understand these concepts here, Spring Boot's annotations (`@RestController`, `@GetMapping`, `@RequestBody`, etc.) will make complete sense — because you'll already know what they're abstracting away.
+So I built this first, with three specific goals:
 
-**Do not skip this.** If you go straight to Spring Boot without understanding the foundations, you'll be memorizing annotations without knowing why they exist.
+**1. Understand HTTP methods and what they mean semantically.**
+Not just "GET retrieves data" — but why you use PATCH instead of PUT for partial updates, why DELETE returns 404 when something doesn't exist, and why POST returns 201 instead of 200.
 
----
+**2. Understand HTTP status codes and when to use them.**
+Every response in this API has a deliberately chosen status code. 200 for success, 201 for resource creation, 400 for bad input, 404 for missing resources, 500 for unexpected server errors. These aren't arbitrary — they're part of the HTTP contract.
 
-## What This API Does
+**3. Understand how a request actually flows through a layered application.**
+From the raw HTTP request coming in, to JSON being parsed, to business logic running, to data being persisted, and a structured response going back out. Spring Boot automates this wiring — this project does it manually so you can see every step.
 
-A simple book management REST API. It lets you add, view, search, update, and delete books through HTTP requests. Books are stored in a local `Books.json` file for persistence.
+**Did this project accomplish its intended goals for myself?**
+
+Yes, very much so :)
+
 
 ---
 
@@ -37,6 +41,7 @@ A simple book management REST API. It lets you add, view, search, update, and de
 | SparkJava 2.9.4 | Lightweight HTTP web framework |
 | Jackson | JSON serialization and deserialization |
 | Maven | Dependency and build management |
+| JUnit 5 | Unit testing |
 
 ---
 
@@ -46,63 +51,138 @@ A simple book management REST API. It lets you add, view, search, update, and de
 src/
 └── main/java/api/
     ├── controller/
-    │   └── LibraryAPI.java         # Route definitions (HTTP endpoints live here)
+    │   └── LibraryAPI.java         # Entry point. Defines all HTTP routes.
     ├── manager/
-    │   └── LibraryManager.java     # Business logic (validation, orchestration)
+    │   └── LibraryManager.java     # Business logic. Validates input, orchestrates operations.
     ├── models/
-    │   ├── Book.java               # The Book entity/object
-    │   └── BookInput.java          # DTO — what the client sends in a request body
+    │   ├── Book.java               # The Book entity. Validates its own fields on construction.
+    │   └── BookInput.java          # DTO. Represents what the client sends in a request body.
     ├── repository/
-    │   └── BookRepository.java     # In-memory list of books (the data layer)
+    │   ├── Repository.java         # Generic interface: add, remove, getAll, clear.
+    │   └── BookRepository.java     # In-memory list. Implements Repository<Book>.
     ├── storage/
-    │   └── BookStorage.java        # Reads and writes Books.json to disk
+    │   ├── Storage.java            # Generic interface: save, load.
+    │   └── BookStorage.java        # JSON file persistence. Implements Storage<Book>.
     ├── responses/
-    │   ├── ApiResponse.java        # Standard success response wrapper
-    │   └── ErrorResponse.java      # Standard error response wrapper
+    │   ├── ApiResponse.java        # Wraps successful responses: success, message, data, timestamp.
+    │   └── ErrorResponse.java      # Wraps error responses: error, details, statusCode, timestamp.
+    ├── exceptions/
+    │   └── StorageException.java   # Custom unchecked exception for file I/O failures.
     └── util/
-        └── BookIDGenerator.java    # Auto-incrementing ID generator
+        └── BookIDGenerator.java    # Thread-safe auto-incrementing ID generator using AtomicInteger.
 ```
+
+---
+
+## Architecture
+
+This project uses a **layered architecture**. Each layer has a single responsibility and only talks to the layer directly below it.
+
+```
+┌─────────────────────────────────┐
+│         LibraryAPI.java         │  ← HTTP layer. Routes, status codes, JSON in/out.
+└────────────────┬────────────────┘
+                 │
+┌────────────────▼────────────────┐
+│       LibraryManager.java       │  ← Business logic. Validation, search, sort, stats.
+└────────────────┬────────────────┘
+                 │
+┌────────────────▼────────────────┐
+│      BookRepository.java        │  ← In-memory data. Unmodifiable list via Collections.
+└────────────────┬────────────────┘
+                 │
+┌────────────────▼────────────────┐
+│       BookStorage.java          │  ← File persistence. Reads/writes Books.json via Jackson.
+└─────────────────────────────────┘
+```
+
+**Why this separation matters:** In Spring Boot, this same pattern exists — `@RestController` → `@Service` → `@Repository` — but the framework wires it together automatically. Here, the wiring is explicit and manual, so you can see exactly what each layer is responsible for.
 
 ---
 
 ## How a Request Flows Through the App
 
-Using `POST /api/books` as an example:
+Using `POST /api/books` as a concrete example:
 
 ```
-Client sends POST request with JSON body
-        ↓
-LibraryAPI.java        → Receives the HTTP request, reads the body
-        ↓
-BookInput.java         → Maps raw JSON into a Java object (deserialization)
-        ↓
-LibraryManager.java    → Runs business logic (e.g., validates required fields)
-        ↓
-BookRepository.java    → Adds the new book to the in-memory list
-        ↓
-BookStorage.java       → Writes the updated list to Books.json
-        ↓
-Returns HTTP 201 with a JSON response body
+1. Client sends:
+   POST /api/books
+   Content-Type: application/json
+   Body: {"title":"1984","author":"Orwell","genre":"Fiction","price":15.99}
+
+2. LibraryAPI.java
+   → SparkJava matches the route
+   → Jackson calls mapper.readValue(req.body(), BookInput.class)
+   → Raw JSON becomes a BookInput object (the DTO)
+
+3. LibraryManager.java
+   → validateBookInput(input) checks title, author, genre are not null/empty
+   → price must be > 0
+   → Throws IllegalArgumentException if anything fails
+
+4. Book.java
+   → new Book(title, author, genre, price) is called
+   → Book validates its own fields again on construction
+   → BookIDGenerator.generateNextID() assigns a zero-padded ID ("0003")
+
+5. BookRepository.java
+   → repository.add(newBook) appends the book to the in-memory list
+   → getAll() returns Collections.unmodifiableList() — the list cannot be modified externally
+
+6. BookStorage.java
+   → storage.save(repository.getAll()) writes the full list to Books.json
+   → Throws StorageException (extends RuntimeException) on I/O failure
+
+7. LibraryAPI.java
+   → res.status(201) — 201 Created, not 200 OK
+   → Returns: {"success":true,"message":"Book Added Successfully","data":{...},"timestamp":...}
 ```
 
-Every layer has a single responsibility. This is the foundation of how Spring Boot organizes code too — just with annotations doing the wiring automatically.
+---
+
+## Key Design Decisions
+
+**`BookInput` vs `Book` (DTO pattern)**
+`BookInput` is what the client sends. `Book` is what the system stores. They are kept separate because a client should never be able to set an ID directly — the ID is always generated server-side by `BookIDGenerator`. `BookInput` is also reused for PATCH requests, where all fields are optional.
+
+**`Repository<T>` and `Storage<T>` interfaces**
+Both are generic interfaces. `Repository<T>` defines `add`, `remove`, `getAll`, `clear`. `Storage<T>` defines `save` and `load`. Using interfaces means the implementation can be swapped — e.g., replacing `BookStorage` with a database-backed implementation — without changing `LibraryManager`.
+
+**`BookIDGenerator` with `AtomicInteger`**
+IDs are generated using `AtomicInteger.getAndIncrement()`, which makes the read-and-increment a single atomic operation. This prevents duplicate IDs under concurrent requests. On startup, `LibraryManager` reads all existing books, finds the highest ID, and sets the counter to `maxId + 1` — so IDs never reset after a restart.
+
+**`Collections.unmodifiableList()` in `BookRepository`**
+`getAll()` returns a read-only view of the internal list. External callers cannot accidentally modify repository state by holding a reference to the list.
+
+**`StorageException` as an unchecked exception**
+`BookStorage` wraps `IOException` in a custom `StorageException extends RuntimeException`. This means callers don't have to declare `throws` everywhere, but file failures still bubble up with meaningful context rather than being swallowed.
+
+**PATCH only updates provided fields**
+In `LibraryManager.patchBook()`, each field is only updated if it is non-null and non-empty. A PATCH request with just `{"price": 12.99}` will update the price and leave title, author, and genre untouched.
+
+**Consistent response shape**
+Every successful response is wrapped in `ApiResponse<T>` (success, message, data, timestamp). Every error is wrapped in `ErrorResponse` (error, details, statusCode, timestamp). This consistency means clients always know what shape to expect regardless of which endpoint they hit.
 
 ---
 
 ## API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/health` | Check if the API is running |
-| `GET` | `/api/books` | Get all books |
-| `GET` | `/api/books/:id` | Get a single book by ID |
-| `POST` | `/api/books` | Add a new book |
-| `PATCH` | `/api/books/:id` | Partially update a book |
-| `DELETE` | `/api/books/:id` | Delete a book by ID |
-| `GET` | `/api/books/search?type=&value=` | Search by author, title, genre, or price |
-| `GET` | `/api/books/budget?maxPrice=` | Get books under a given price |
-| `GET` | `/api/books/sorted?by=` | Sort books by title, author, price, etc. |
-| `GET` | `/api/books/stats` | Get total book count, total value, and most expensive book |
+| Method | Endpoint | Status Codes | Description |
+|--------|----------|-------------|-------------|
+| `GET` | `/api/health` | 200 | Check if the API is running |
+| `GET` | `/api/books` | 200 | Get all books |
+| `GET` | `/api/books/:id` | 200, 404 | Get a single book by ID |
+| `POST` | `/api/books` | 201, 400 | Add a new book |
+| `PATCH` | `/api/books/:id` | 200, 400, 404 | Partially update a book |
+| `DELETE` | `/api/books/:id` | 200, 404 | Delete a book by ID |
+| `GET` | `/api/books/search?type=&value=` | 200, 400 | Search by author, title, genre, or price |
+| `GET` | `/api/books/budget?maxPrice=` | 200, 400 | Get books under a given price |
+| `GET` | `/api/books/sorted?by=` | 200 | Sort by title, author, genre, price, or id |
+| `GET` | `/api/books/stats` | 200 | Total books, total value, most expensive book |
+
+**Search types:** `author`, `title`, `genre`, `price` — all use partial/contains matching except price (exact match with float tolerance of `0.0001`).
+
+**Sort fields:** `title`, `author`, `genre`, `price`, `id` — defaults to `title` if no field is provided or the field is unrecognized.
 
 ---
 
@@ -110,25 +190,25 @@ Every layer has a single responsibility. This is the foundation of how Spring Bo
 
 - Java 21 or higher
 - Maven
-- Internet connection (for Maven to download dependencies on first build)
+- Internet connection on first build (Maven downloads dependencies)
 
 ---
 
 ## How to Run
 
 ```bash
-# 1. Clone the repository
+# Clone the repository
 git clone https://github.com/yourusername/library-api.git
 cd library-api
 
-# 2. Build the project
+# Build the project
 mvn clean compile
 
-# 3. Start the server
+# Start the server
 mvn exec:java
 ```
 
-The API will be available at `http://localhost:8080`.
+The API starts at `http://localhost:8080`. A `Books.json` file will be created automatically in the project root on the first write.
 
 ---
 
@@ -156,7 +236,7 @@ curl -X POST http://localhost:8080/api/books \
 curl http://localhost:8080/api/books/0000
 ```
 
-### Update a book (partial update)
+### Partially update a book
 ```bash
 curl -X PATCH http://localhost:8080/api/books/0000 \
   -H "Content-Type: application/json" \
@@ -168,7 +248,7 @@ curl -X PATCH http://localhost:8080/api/books/0000 \
 curl -X DELETE http://localhost:8080/api/books/0000
 ```
 
-### Search books
+### Search by author (partial match)
 ```bash
 curl "http://localhost:8080/api/books/search?type=author&value=Orwell"
 ```
@@ -188,35 +268,32 @@ curl "http://localhost:8080/api/books/sorted?by=price"
 curl http://localhost:8080/api/books/stats
 ```
 
-You can also test all of these in **Postman** by setting `http://localhost:8080` as your base URL and creating requests for each endpoint.
+---
+
+## Running Tests
+
+```bash
+mvn test
+```
+
+Tests are written with JUnit 5 and cover:
+
+**`BookTest`** — verifies that `Book` validates its own fields on construction: empty title throws `IllegalArgumentException`, null author throws, negative price throws, zero price throws, and that two books created sequentially receive different IDs.
+
+**`BookIDGeneratorTest`** — verifies sequential generation, zero-padding format (`"0000"`, `"0001"`), correct behaviour past 4 digits (`"10000"`), resettable counter via `setNextId()`, and thread safety: 10 threads each generating 100 IDs concurrently with no duplicates, verified using `AtomicInteger`.
 
 ---
 
-## Problems Encountered and How They Were Solved
+## Problems Encountered and How They Were Fixed
 
 | Problem | Cause | Fix |
 |---------|-------|-----|
-| Jackson couldn't deserialize the `Book` class | No default (no-arg) constructor | Added a default constructor to `Book.java` |
-| IDs were resetting to 0 after every restart | Counter wasn't reading existing data on startup | Load existing books on startup and set the counter to `max ID + 1` |
-| Search wasn't finding partial matches | Using exact string match (`equals`) | Switched to `.contains()` for flexible matching |
-| Empty `Books.json` caused a crash on load | Jackson failed to parse an empty file | Added a file length check before attempting to read |
-| PATCH was overwriting fields with `null` | All fields were being applied regardless of input | Added null checks — only update fields that are actually present in the request |
-
----
-
-## What You'll Understand After This
-
-After completing and studying this project, you will understand:
-
-- How HTTP methods map to operations (GET = read, POST = create, PATCH = update, DELETE = remove)
-- How status codes are chosen and returned (200, 201, 400, 404, 500)
-- How request bodies are parsed from raw JSON into Java objects
-- How path parameters (`:id`) and query parameters (`?type=`) work
-- How to separate routing, logic, data, and storage into distinct layers
-- How to handle errors globally instead of catching them everywhere
-- How file-based persistence works without a database
-
-All of this maps directly to Spring Boot. The difference is that Spring Boot automates the wiring — you'll understand exactly what it's automating.
+| Jackson couldn't deserialize `Book` from JSON | No default (no-arg) constructor | Added `public Book() {}` — Jackson requires it to instantiate the object before setting fields via setters |
+| IDs reset to `0000` after every restart | Counter always initialized to 0 | On startup, `LibraryManager` scans all loaded books, finds the max ID, and calls `BookIDGenerator.setNextId(maxId + 1)` |
+| Search returning no results | Using exact `.equals()` match | Switched to `.toLowerCase().contains(value)` for partial matching on author, title, and genre |
+| Empty `Books.json` caused a crash on load | Jackson failed to parse a zero-byte file | `BookStorage.load()` checks `filePath.length() == 0` and returns an empty list before attempting to read |
+| PATCH was overwriting fields with `null` | All fields were applied regardless of whether they were sent | Each field in `patchBook()` is only applied if non-null and non-empty |
+| Potential duplicate IDs under concurrent requests | Plain `int` counter with non-atomic read-then-increment | Replaced with `AtomicInteger.getAndIncrement()` — read and increment happen as one indivisible operation |
 
 ---
 
@@ -224,4 +301,4 @@ All of this maps directly to Spring Boot. The difference is that Spring Boot aut
 
 MIT — use it however you want.
 
-*Built as a learning project. First REST API. Not the last.*
+*First REST API. Built to understand the foundations before Spring Boot.*
