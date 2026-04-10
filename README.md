@@ -1,257 +1,227 @@
+# Library API
 
-# Library Management System
+> **A REST API built with Java + SparkJava — designed as a hands-on prerequisite before learning Spring Boot.**
 
-![Java](https://img.shields.io/badge/Java-17+-orange?logo=openjdk)
-![Status](https://img.shields.io/badge/status-educational-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
-
-A console-based library management system built in Java, demonstrating object-oriented programming principles.
-
-> **Educational Project**: This project was developed as a learning exercise to practice OOP concepts, input validation, separation of concerns, and defensive programming techniques.
-
-## Overview
-
-This L-M-S provides a command-line interface for managing a collection of books. Users can add books, view the collection, search and filter books, and perform various operations like finding the most expensive book or calculating the total library value.
-
-## Features
-
-### Core Functionality
-- **Add Books**: Add single or multiple books (up to 100 at a time) with automatic ID generation
-- **Display All Books**: View entire collection in a formatted table
-- **Remove Books**: Delete books by author, title, genre, or price
-- **Search Books**: Find books by author, title, genre, or exact price
-- **Budget Filter**: Find all books within a specified price range
-- **Sort Books**: Sort collection by title, author, genre, price, or ID
-- **Most Expensive Book**: Instantly identify the highest-priced book
-- **Total Value**: Calculate the combined value of all books in the library
-
-### Technical Implementations
-- **Immutable Book Objects**: Books cannot be modified after creation, ensuring data integrity
-- **Multi-Layer Validation**: Input validated at both UI and data model layers
-- **Comprehensive Error Handling**: Graceful handling of invalid inputs with user-friendly retry logic
-- **Separation of Concerns**: Clear architectural layers (UI, Business Logic, Data Model, Validation)
-- **Defensive Programming**: Null-safe operations and boundary checking throughout
-
-## Architecture
-
-```
-┌─────────────────────┐
-│     Main.java       │  ← User Interface Layer
-│  (Menu & Display)   │     Handles user interaction
-└──────────┬──────────┘
-           │
-┌──────────▼──────────────┐
-│ InputValidator.java     │  ← Input Validation Layer
-│  (Input Sanitization)   │     Validates and sanitizes user input
-└──────────┬──────────────┘
-           │
-┌──────────▼──────────────┐
-│  LibraryManager.java    │  ← Business Logic Layer
-│  (CRUD Operations)      │     Manages library operations
-└──────────┬──────────────┘
-           │
-┌──────────▼──────────────┐
-│      Book.java          │  ← Data Model Layer
-│  (Immutable Entity)     │     Represents book entities
-└─────────────────────────┘
-```
-
-### Design Patterns & Principles learned from Project
-
-**Object-Oriented Principles**:
-- **Encapsulation**: Private fields with public getters, no setters for immutability
-- **Single Responsibility**: Each class has one clear purpose
-- **Information Hiding**: Implementation details hidden from users
-
-**Design Patterns**:
-- **Manager Pattern**: `LibraryManager` centralizes business logic
-- **Immutability Pattern**: Books use `final` fields and have no mutators
-- **Validator Pattern**: Separate `InputValidator` class for reusable validation logic
-
-## Getting Started
-
-### Prerequisites
-- Java 17 or higher
-- No external dependencies required
-
-### Installation & Running
-
-```bash
-# Clone the repository
-git clone https://github.com/kyledelfin2006/library-management-system.git
-cd library-management-system
-
-# Compile all Java files
-javac *.java
-
-# Run the application
-java Main
-```
-
-
-### Main Menu
-```
-===== LIBRARY MANAGEMENT SYSTEM =====
-=====================================
-=========== by: Kyle D. =============
-
-1 - Add Book
-2 - View All Books
-3 - Remove Book
-4 - Find Books Within Budget
-5 - View Most Expensive Book
-6 - View Total Book Value
-7 - Sort Books
-8 - Search Books
-0 - Exit
-```
-
-### Example Workflow
-
-**Adding Books:**
-```
-How many books to add?: 2
-
-Book 1
-Enter book title: 1984
-Enter book author: George Orwell
-Enter book genre: Dystopian
-Enter book price: 15.99
-
-Book 2
-Enter book title: The Hobbit
-Enter book author: J.R.R. Tolkien
-Enter book genre: Fantasy
-Enter book price: 12.50
-```
-
-**Viewing All Books:**
-```
-ID         Title                     Author               Genre           Price
-BOOK-0001  1984                      George Orwell        Dystopian       15.99
-BOOK-0002  The Hobbit                J.R.R. Tolkien       Fantasy         12.50
-TOTAL BOOKS: 2
-```
-
-**Searching Books:**
-```
-Enter search type (author / genre / title/price): author
-Enter author to search: George Orwell
-
-Found 1 book/s
-BOOK-0001  1984                      George Orwell        Dystopian       15.99
-```
-
-**Sorting Books:**
-```
-Field to sort by: price
-Books sorted by price
-ID         Title                     Author               Genre           Price
-BOOK-0002  The Hobbit                J.R.R. Tolkien       Fantasy         12.50
-BOOK-0001  1984                      George Orwell        Dystopian       15.99
-```
-
-##  Code Quality Features (Developer's Favorites)
-
-### Input Validation
-- **Multi-layer validation**: Both at UI level and within Book constructor
-- **Type checking**: Ensures numeric inputs are valid numbers
-- **Boundary validation**: Prevents negative prices, empty strings, and excessive quantities
-- **Retry logic**: Prompts users again on invalid input rather than crashing
-
-### Error Handling
-- Catches `InputMismatchException` for invalid data types
-- Catches `NumberFormatException` for parsing errors
-- Validates null and empty strings before processing
-- User-friendly error messages guide users to correct input
-
-### Code Organization
-- **Clear naming conventions**: Methods and variables have descriptive names
-- **Comments**: Strategic comments explain complex logic
-- **Consistent formatting**: Proper indentation and spacing throughout
-- **Modular design**: Each method has a single, well-defined purpose
-
-##  Ideas Learned
-
-1. **Object-Oriented Programming**
-   - Classes and objects
-   - Encapsulation and data hiding
-   - Immutability and final fields
-   - Constructor validation
-
-2. **Data Structures**
-   - LinkedList for dynamic book storage
-   - ArrayList for temporary collections
-   - List interface for flexibility
-
-3. **Algorithms**
-   - Linear search for finding books
-   - Comparator-based sorting
-   - Sequential validation
-
-4. **Software Design**
-   - Separation of concerns
-   - Layered architecture
-   - Single Responsibility Principle
-   - Defensive programming
-
-5. **User Experience**
-   - Clear menu navigation
-   - Formatted output tables
-   - Helpful error messages
-   - Input retry mechanisms
-
-##  Technical Implementation Details
-
-### Book Class (`Book.java`)
-- **Immutable design**: All fields are `final`
-- **Auto-generated IDs**: Format `BOOK-0001`, `BOOK-0002`, etc.
-- **Constructor validation**: Rejects null/empty strings and non-positive prices
-- **Formatted output**: `toString()` produces aligned table rows
-
-### LibraryManager Class (`LibraryManager.java`)
-- **LinkedList storage**: Efficient for adding/removing books
-- **Case-insensitive search**: Uses `equalsIgnoreCase()` for user-friendly matching
-- **Flexible sorting**: Supports sorting by any book attribute
-- **Safe deletion**: Uses temporary list to avoid ConcurrentModificationException
-
-### InputValidator Class (`InputValidator.java`)
-- **Reusable validation**: Can be used across different parts of the application
-- **Method overloading**: `getValidDouble()` with and without minimum value
-- **Loop-based validation**: Continues prompting until valid input received
-- **Scanner management**: Proper handling of scanner buffer
-
-### Main Class (`Main.java`)
-- **Menu-driven interface**: Clear numbered options
-- **Input validation**: Ensures menu choice is within valid range
-- **Switch statement**: Clean routing to appropriate manager methods
-- **Resource cleanup**: Closes scanner on exit
-
-## Potential Enhancements
-
-Future features to explore:
-- [ ] Persistent storage (save/load from files or database)
-- [ ] Book borrowing/return system with due dates
-- [ ] ISBN validation and duplicate detection
-- [ ] Advanced filtering (multiple criteria simultaneously)
-- [ ] Export functionality (CSV, JSON, XML)
-- [ ] GUI version using JavaFX or Swing
-- [ ] Unit tests with JUnit
-- [ ] Multi-user support with authentication
-
-##  Contributing
-
-This is primarily an educational project, but suggestions and feedback are always welcome! Feel free to:
-- Open issues for bugs or improvements
-- Fork and experiment with your own features
-- Share your learning experience
-
-## Contacts
-
-- [@kyledelfin2006](https://github.com/kyledelfin2006)
-
-**Project Link**: [https://github.com/kyledelfin2006/library-management-system](https://github.com/kyledelfin2006/library-management-system)
+![Java](https://img.shields.io/badge/Java-21+-orange)
+![SparkJava](https://img.shields.io/badge/SparkJava-2.9.4-red)
+![Status](https://img.shields.io/badge/status-working-brightgreen)
 
 ---
 
-*Built with intent as a learning project to master Java OOP and clean code principles*
+## Why This Project Exists
+
+Before jumping into Spring Boot, you need to understand what a web framework is actually doing for you. This project builds a fully working REST API using **SparkJava** — a minimal framework that makes the fundamentals explicit:
+
+- How HTTP routes are defined manually
+- How JSON is parsed and returned by hand
+- How request/response cycles work without magic annotations
+- How data is read, stored, and persisted yourself
+
+Once you understand these concepts here, Spring Boot's annotations (`@RestController`, `@GetMapping`, `@RequestBody`, etc.) will make complete sense — because you'll already know what they're abstracting away.
+
+**Do not skip this.** If you go straight to Spring Boot without understanding the foundations, you'll be memorizing annotations without knowing why they exist.
+
+---
+
+## What This API Does
+
+A simple book management REST API. It lets you add, view, search, update, and delete books through HTTP requests. Books are stored in a local `Books.json` file for persistence.
+
+---
+
+## Tech Stack
+
+| Tool | Purpose |
+|------|---------|
+| Java 21 | Core language |
+| SparkJava 2.9.4 | Lightweight HTTP web framework |
+| Jackson | JSON serialization and deserialization |
+| Maven | Dependency and build management |
+
+---
+
+## Project Structure
+
+```
+src/
+└── main/java/api/
+    ├── controller/
+    │   └── LibraryAPI.java         # Route definitions (HTTP endpoints live here)
+    ├── manager/
+    │   └── LibraryManager.java     # Business logic (validation, orchestration)
+    ├── models/
+    │   ├── Book.java               # The Book entity/object
+    │   └── BookInput.java          # DTO — what the client sends in a request body
+    ├── repository/
+    │   └── BookRepository.java     # In-memory list of books (the data layer)
+    ├── storage/
+    │   └── BookStorage.java        # Reads and writes Books.json to disk
+    ├── responses/
+    │   ├── ApiResponse.java        # Standard success response wrapper
+    │   └── ErrorResponse.java      # Standard error response wrapper
+    └── util/
+        └── BookIDGenerator.java    # Auto-incrementing ID generator
+```
+
+---
+
+## How a Request Flows Through the App
+
+Using `POST /api/books` as an example:
+
+```
+Client sends POST request with JSON body
+        ↓
+LibraryAPI.java        → Receives the HTTP request, reads the body
+        ↓
+BookInput.java         → Maps raw JSON into a Java object (deserialization)
+        ↓
+LibraryManager.java    → Runs business logic (e.g., validates required fields)
+        ↓
+BookRepository.java    → Adds the new book to the in-memory list
+        ↓
+BookStorage.java       → Writes the updated list to Books.json
+        ↓
+Returns HTTP 201 with a JSON response body
+```
+
+Every layer has a single responsibility. This is the foundation of how Spring Boot organizes code too — just with annotations doing the wiring automatically.
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/health` | Check if the API is running |
+| `GET` | `/api/books` | Get all books |
+| `GET` | `/api/books/:id` | Get a single book by ID |
+| `POST` | `/api/books` | Add a new book |
+| `PATCH` | `/api/books/:id` | Partially update a book |
+| `DELETE` | `/api/books/:id` | Delete a book by ID |
+| `GET` | `/api/books/search?type=&value=` | Search by author, title, genre, or price |
+| `GET` | `/api/books/budget?maxPrice=` | Get books under a given price |
+| `GET` | `/api/books/sorted?by=` | Sort books by title, author, price, etc. |
+| `GET` | `/api/books/stats` | Get total book count, total value, and most expensive book |
+
+---
+
+## Requirements
+
+- Java 21 or higher
+- Maven
+- Internet connection (for Maven to download dependencies on first build)
+
+---
+
+## How to Run
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/yourusername/library-api.git
+cd library-api
+
+# 2. Build the project
+mvn clean compile
+
+# 3. Start the server
+mvn exec:java
+```
+
+The API will be available at `http://localhost:8080`.
+
+---
+
+## Testing with cURL
+
+### Health check
+```bash
+curl http://localhost:8080/api/health
+```
+
+### Get all books
+```bash
+curl http://localhost:8080/api/books
+```
+
+### Add a new book
+```bash
+curl -X POST http://localhost:8080/api/books \
+  -H "Content-Type: application/json" \
+  -d '{"title":"1984","author":"Orwell","genre":"Fiction","price":15.99}'
+```
+
+### Get a book by ID
+```bash
+curl http://localhost:8080/api/books/0000
+```
+
+### Update a book (partial update)
+```bash
+curl -X PATCH http://localhost:8080/api/books/0000 \
+  -H "Content-Type: application/json" \
+  -d '{"price":12.99}'
+```
+
+### Delete a book
+```bash
+curl -X DELETE http://localhost:8080/api/books/0000
+```
+
+### Search books
+```bash
+curl "http://localhost:8080/api/books/search?type=author&value=Orwell"
+```
+
+### Books within a budget
+```bash
+curl "http://localhost:8080/api/books/budget?maxPrice=20"
+```
+
+### Sorted books
+```bash
+curl "http://localhost:8080/api/books/sorted?by=price"
+```
+
+### Library stats
+```bash
+curl http://localhost:8080/api/books/stats
+```
+
+You can also test all of these in **Postman** by setting `http://localhost:8080` as your base URL and creating requests for each endpoint.
+
+---
+
+## Problems Encountered and How They Were Solved
+
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| Jackson couldn't deserialize the `Book` class | No default (no-arg) constructor | Added a default constructor to `Book.java` |
+| IDs were resetting to 0 after every restart | Counter wasn't reading existing data on startup | Load existing books on startup and set the counter to `max ID + 1` |
+| Search wasn't finding partial matches | Using exact string match (`equals`) | Switched to `.contains()` for flexible matching |
+| Empty `Books.json` caused a crash on load | Jackson failed to parse an empty file | Added a file length check before attempting to read |
+| PATCH was overwriting fields with `null` | All fields were being applied regardless of input | Added null checks — only update fields that are actually present in the request |
+
+---
+
+## What You'll Understand After This
+
+After completing and studying this project, you will understand:
+
+- How HTTP methods map to operations (GET = read, POST = create, PATCH = update, DELETE = remove)
+- How status codes are chosen and returned (200, 201, 400, 404, 500)
+- How request bodies are parsed from raw JSON into Java objects
+- How path parameters (`:id`) and query parameters (`?type=`) work
+- How to separate routing, logic, data, and storage into distinct layers
+- How to handle errors globally instead of catching them everywhere
+- How file-based persistence works without a database
+
+All of this maps directly to Spring Boot. The difference is that Spring Boot automates the wiring — you'll understand exactly what it's automating.
+
+---
+
+## License
+
+MIT — use it however you want.
+
+*Built as a learning project. First REST API. Not the last.*
