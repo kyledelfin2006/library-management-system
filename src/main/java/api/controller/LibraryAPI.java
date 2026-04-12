@@ -19,7 +19,7 @@
 
     public class LibraryAPI {
         private static final BookStorage storage = new BookStorage("Books.json");
-        private static final BookRepository repository = new BookRepository(new ArrayList<>());
+        private static final BookRepository repository = new BookRepository();
         private static final LibraryManager manager = new LibraryManager(repository,storage);
         private static final ObjectMapper mapper = new ObjectMapper();
 

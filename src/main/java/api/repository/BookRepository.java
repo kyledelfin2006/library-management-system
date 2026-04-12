@@ -8,11 +8,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class BookRepository implements Repository<Book> {
-    private List<Book> books = new ArrayList<>();
+    private final List<Book> books = new ArrayList<>();
 
-    public BookRepository(List<Book> books) {
-        this.books = books;
-    }
+    public BookRepository() {}
 
     @Override
     public void add(Book book){
