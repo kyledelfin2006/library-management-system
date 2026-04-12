@@ -18,10 +18,10 @@ Spring Boot abstracts a lot: routing, JSON parsing, request/response handling, e
 So I built this first, with three specific goals:
 
 **1. Understand HTTP methods and what they mean semantically.**
-Not just "GET retrieves data" — but why you use PATCH instead of PUT for partial updates, why DELETE returns 404 when something doesn't exist, and why POST returns 201 instead of 200.
+Not just "GET retrieves data", but why i would use PATCH instead of PUT for partial updates, why DELETE returns 404 when something doesn't exist, and why POST returns 201 instead of 200.
 
 **2. Understand HTTP status codes and when to use them.**
-Every response in this API has a deliberately chosen status code. 200 for success, 201 for resource creation, 400 for bad input, 404 for missing resources, 500 for unexpected server errors. These aren't arbitrary — they're part of the HTTP contract.
+Every response in this API has a deliberately chosen status code. 200 for success, 201 for resource creation, 400 for bad input, 404 for missing resources, 500 for unexpected server errors. These aren't arbitrary, they're part of the HTTP contract.
 
 **3. Understand how a request actually flows through a layered application.**
 From the raw HTTP request coming in, to JSON being parsed, to business logic running, to data being persisted, and a structured response going back out. Spring Boot automates this wiring — this project does it manually so you can see every step.
