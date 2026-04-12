@@ -1,257 +1,304 @@
+# Library API
 
-# Library Management System
+> A REST API built with Java and SparkJava — built as a prerequisite to learning Spring Boot.
 
-![Java](https://img.shields.io/badge/Java-17+-orange?logo=openjdk)
-![Status](https://img.shields.io/badge/status-educational-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
-
-A console-based library management system built in Java, demonstrating object-oriented programming principles.
-
-> **Educational Project**: This project was developed as a learning exercise to practice OOP concepts, input validation, separation of concerns, and defensive programming techniques.
-
-## Overview
-
-This L-M-S provides a command-line interface for managing a collection of books. Users can add books, view the collection, search and filter books, and perform various operations like finding the most expensive book or calculating the total library value.
-
-## Features
-
-### Core Functionality
-- **Add Books**: Add single or multiple books (up to 100 at a time) with automatic ID generation
-- **Display All Books**: View entire collection in a formatted table
-- **Remove Books**: Delete books by author, title, genre, or price
-- **Search Books**: Find books by author, title, genre, or exact price
-- **Budget Filter**: Find all books within a specified price range
-- **Sort Books**: Sort collection by title, author, genre, price, or ID
-- **Most Expensive Book**: Instantly identify the highest-priced book
-- **Total Value**: Calculate the combined value of all books in the library
-
-### Technical Implementations
-- **Immutable Book Objects**: Books cannot be modified after creation, ensuring data integrity
-- **Multi-Layer Validation**: Input validated at both UI and data model layers
-- **Comprehensive Error Handling**: Graceful handling of invalid inputs with user-friendly retry logic
-- **Separation of Concerns**: Clear architectural layers (UI, Business Logic, Data Model, Validation)
-- **Defensive Programming**: Null-safe operations and boundary checking throughout
-
-## Architecture
-
-```
-┌─────────────────────┐
-│     Main.java       │  ← User Interface Layer
-│  (Menu & Display)   │     Handles user interaction
-└──────────┬──────────┘
-           │
-┌──────────▼──────────────┐
-│ InputValidator.java     │  ← Input Validation Layer
-│  (Input Sanitization)   │     Validates and sanitizes user input
-└──────────┬──────────────┘
-           │
-┌──────────▼──────────────┐
-│  LibraryManager.java    │  ← Business Logic Layer
-│  (CRUD Operations)      │     Manages library operations
-└──────────┬──────────────┘
-           │
-┌──────────▼──────────────┐
-│      Book.java          │  ← Data Model Layer
-│  (Immutable Entity)     │     Represents book entities
-└─────────────────────────┘
-```
-
-### Design Patterns & Principles learned from Project
-
-**Object-Oriented Principles**:
-- **Encapsulation**: Private fields with public getters, no setters for immutability
-- **Single Responsibility**: Each class has one clear purpose
-- **Information Hiding**: Implementation details hidden from users
-
-**Design Patterns**:
-- **Manager Pattern**: `LibraryManager` centralizes business logic
-- **Immutability Pattern**: Books use `final` fields and have no mutators
-- **Validator Pattern**: Separate `InputValidator` class for reusable validation logic
-
-## Getting Started
-
-### Prerequisites
-- Java 17 or higher
-- No external dependencies required
-
-### Installation & Running
-
-```bash
-# Clone the repository
-git clone https://github.com/kyledelfin2006/library-management-system.git
-cd library-management-system
-
-# Compile all Java files
-javac *.java
-
-# Run the application
-java Main
-```
-
-
-### Main Menu
-```
-===== LIBRARY MANAGEMENT SYSTEM =====
-=====================================
-=========== by: Kyle D. =============
-
-1 - Add Book
-2 - View All Books
-3 - Remove Book
-4 - Find Books Within Budget
-5 - View Most Expensive Book
-6 - View Total Book Value
-7 - Sort Books
-8 - Search Books
-0 - Exit
-```
-
-### Example Workflow
-
-**Adding Books:**
-```
-How many books to add?: 2
-
-Book 1
-Enter book title: 1984
-Enter book author: George Orwell
-Enter book genre: Dystopian
-Enter book price: 15.99
-
-Book 2
-Enter book title: The Hobbit
-Enter book author: J.R.R. Tolkien
-Enter book genre: Fantasy
-Enter book price: 12.50
-```
-
-**Viewing All Books:**
-```
-ID         Title                     Author               Genre           Price
-BOOK-0001  1984                      George Orwell        Dystopian       15.99
-BOOK-0002  The Hobbit                J.R.R. Tolkien       Fantasy         12.50
-TOTAL BOOKS: 2
-```
-
-**Searching Books:**
-```
-Enter search type (author / genre / title/price): author
-Enter author to search: George Orwell
-
-Found 1 book/s
-BOOK-0001  1984                      George Orwell        Dystopian       15.99
-```
-
-**Sorting Books:**
-```
-Field to sort by: price
-Books sorted by price
-ID         Title                     Author               Genre           Price
-BOOK-0002  The Hobbit                J.R.R. Tolkien       Fantasy         12.50
-BOOK-0001  1984                      George Orwell        Dystopian       15.99
-```
-
-##  Code Quality Features (Developer's Favorites)
-
-### Input Validation
-- **Multi-layer validation**: Both at UI level and within Book constructor
-- **Type checking**: Ensures numeric inputs are valid numbers
-- **Boundary validation**: Prevents negative prices, empty strings, and excessive quantities
-- **Retry logic**: Prompts users again on invalid input rather than crashing
-
-### Error Handling
-- Catches `InputMismatchException` for invalid data types
-- Catches `NumberFormatException` for parsing errors
-- Validates null and empty strings before processing
-- User-friendly error messages guide users to correct input
-
-### Code Organization
-- **Clear naming conventions**: Methods and variables have descriptive names
-- **Comments**: Strategic comments explain complex logic
-- **Consistent formatting**: Proper indentation and spacing throughout
-- **Modular design**: Each method has a single, well-defined purpose
-
-##  Ideas Learned
-
-1. **Object-Oriented Programming**
-   - Classes and objects
-   - Encapsulation and data hiding
-   - Immutability and final fields
-   - Constructor validation
-
-2. **Data Structures**
-   - LinkedList for dynamic book storage
-   - ArrayList for temporary collections
-   - List interface for flexibility
-
-3. **Algorithms**
-   - Linear search for finding books
-   - Comparator-based sorting
-   - Sequential validation
-
-4. **Software Design**
-   - Separation of concerns
-   - Layered architecture
-   - Single Responsibility Principle
-   - Defensive programming
-
-5. **User Experience**
-   - Clear menu navigation
-   - Formatted output tables
-   - Helpful error messages
-   - Input retry mechanisms
-
-##  Technical Implementation Details
-
-### Book Class (`Book.java`)
-- **Immutable design**: All fields are `final`
-- **Auto-generated IDs**: Format `BOOK-0001`, `BOOK-0002`, etc.
-- **Constructor validation**: Rejects null/empty strings and non-positive prices
-- **Formatted output**: `toString()` produces aligned table rows
-
-### LibraryManager Class (`LibraryManager.java`)
-- **LinkedList storage**: Efficient for adding/removing books
-- **Case-insensitive search**: Uses `equalsIgnoreCase()` for user-friendly matching
-- **Flexible sorting**: Supports sorting by any book attribute
-- **Safe deletion**: Uses temporary list to avoid ConcurrentModificationException
-
-### InputValidator Class (`InputValidator.java`)
-- **Reusable validation**: Can be used across different parts of the application
-- **Method overloading**: `getValidDouble()` with and without minimum value
-- **Loop-based validation**: Continues prompting until valid input received
-- **Scanner management**: Proper handling of scanner buffer
-
-### Main Class (`Main.java`)
-- **Menu-driven interface**: Clear numbered options
-- **Input validation**: Ensures menu choice is within valid range
-- **Switch statement**: Clean routing to appropriate manager methods
-- **Resource cleanup**: Closes scanner on exit
-
-## Potential Enhancements
-
-Future features to explore:
-- [ ] Persistent storage (save/load from files or database)
-- [ ] Book borrowing/return system with due dates
-- [ ] ISBN validation and duplicate detection
-- [ ] Advanced filtering (multiple criteria simultaneously)
-- [ ] Export functionality (CSV, JSON, XML)
-- [ ] GUI version using JavaFX or Swing
-- [ ] Unit tests with JUnit
-- [ ] Multi-user support with authentication
-
-##  Contributing
-
-This is primarily an educational project, but suggestions and feedback are always welcome! Feel free to:
-- Open issues for bugs or improvements
-- Fork and experiment with your own features
-- Share your learning experience
-
-## Contacts
-
-- [@kyledelfin2006](https://github.com/kyledelfin2006)
-
-**Project Link**: [https://github.com/kyledelfin2006/library-management-system](https://github.com/kyledelfin2006/library-management-system)
+![Java](https://img.shields.io/badge/Java-21+-orange)
+![SparkJava](https://img.shields.io/badge/SparkJava-2.9.4-red)
+![Jackson](https://img.shields.io/badge/Jackson-2.x-blue)
+![Status](https://img.shields.io/badge/status-working-brightgreen)
 
 ---
 
-*Built with intent as a learning project to master Java OOP and clean code principles*
+## Why I Built This
+
+Before starting Spring Boot, I wanted a solid understanding of what a web framework is actually doing, not just how to use one. 
+
+Spring Boot abstracts a lot: routing, JSON parsing, request/response handling, error management, dependency injection. That's powerful, but if i jump straight into it without understanding the foundations, you end up copying annotations without knowing what problem they solve.
+
+So I built this first, with three specific goals:
+
+**1. Understand HTTP methods and what they mean semantically.**
+Not just "GET retrieves data" — but why you use PATCH instead of PUT for partial updates, why DELETE returns 404 when something doesn't exist, and why POST returns 201 instead of 200.
+
+**2. Understand HTTP status codes and when to use them.**
+Every response in this API has a deliberately chosen status code. 200 for success, 201 for resource creation, 400 for bad input, 404 for missing resources, 500 for unexpected server errors. These aren't arbitrary — they're part of the HTTP contract.
+
+**3. Understand how a request actually flows through a layered application.**
+From the raw HTTP request coming in, to JSON being parsed, to business logic running, to data being persisted, and a structured response going back out. Spring Boot automates this wiring — this project does it manually so you can see every step.
+
+**Did this project accomplish its intended goals for myself?**
+
+Yes, very much so :)
+
+
+---
+
+## Tech Stack
+
+| Tool | Purpose |
+|------|---------|
+| Java 21 | Core language |
+| SparkJava 2.9.4 | Lightweight HTTP web framework |
+| Jackson | JSON serialization and deserialization |
+| Maven | Dependency and build management |
+| JUnit 5 | Unit testing |
+
+---
+
+## Project Structure
+
+```
+src/
+└── main/java/api/
+    ├── controller/
+    │   └── LibraryAPI.java         # Entry point. Defines all HTTP routes.
+    ├── manager/
+    │   └── LibraryManager.java     # Business logic. Validates input, orchestrates operations.
+    ├── models/
+    │   ├── Book.java               # The Book entity. Validates its own fields on construction.
+    │   └── BookInput.java          # DTO. Represents what the client sends in a request body.
+    ├── repository/
+    │   ├── Repository.java         # Generic interface: add, remove, getAll, clear.
+    │   └── BookRepository.java     # In-memory list. Implements Repository<Book>.
+    ├── storage/
+    │   ├── Storage.java            # Generic interface: save, load.
+    │   └── BookStorage.java        # JSON file persistence. Implements Storage<Book>.
+    ├── responses/
+    │   ├── ApiResponse.java        # Wraps successful responses: success, message, data, timestamp.
+    │   └── ErrorResponse.java      # Wraps error responses: error, details, statusCode, timestamp.
+    ├── exceptions/
+    │   └── StorageException.java   # Custom unchecked exception for file I/O failures.
+    └── util/
+        └── BookIDGenerator.java    # Thread-safe auto-incrementing ID generator using AtomicInteger.
+```
+
+---
+
+## Architecture
+
+This project uses a **layered architecture**. Each layer has a single responsibility and only talks to the layer directly below it.
+
+```
+┌─────────────────────────────────┐
+│         LibraryAPI.java         │  ← HTTP layer. Routes, status codes, JSON in/out.
+└────────────────┬────────────────┘
+                 │
+┌────────────────▼────────────────┐
+│       LibraryManager.java       │  ← Business logic. Validation, search, sort, stats.
+└────────────────┬────────────────┘
+                 │
+┌────────────────▼────────────────┐
+│      BookRepository.java        │  ← In-memory data. Unmodifiable list via Collections.
+└────────────────┬────────────────┘
+                 │
+┌────────────────▼────────────────┐
+│       BookStorage.java          │  ← File persistence. Reads/writes Books.json via Jackson.
+└─────────────────────────────────┘
+```
+
+**Why this separation matters:** In Spring Boot, this same pattern exists — `@RestController` → `@Service` → `@Repository` — but the framework wires it together automatically. Here, the wiring is explicit and manual, so you can see exactly what each layer is responsible for.
+
+---
+
+## How a Request Flows Through the App
+
+Using `POST /api/books` as a concrete example:
+
+```
+1. Client sends:
+   POST /api/books
+   Content-Type: application/json
+   Body: {"title":"1984","author":"Orwell","genre":"Fiction","price":15.99}
+
+2. LibraryAPI.java
+   → SparkJava matches the route
+   → Jackson calls mapper.readValue(req.body(), BookInput.class)
+   → Raw JSON becomes a BookInput object (the DTO)
+
+3. LibraryManager.java
+   → validateBookInput(input) checks title, author, genre are not null/empty
+   → price must be > 0
+   → Throws IllegalArgumentException if anything fails
+
+4. Book.java
+   → new Book(title, author, genre, price) is called
+   → Book validates its own fields again on construction
+   → BookIDGenerator.generateNextID() assigns a zero-padded ID ("0003")
+
+5. BookRepository.java
+   → repository.add(newBook) appends the book to the in-memory list
+   → getAll() returns Collections.unmodifiableList() — the list cannot be modified externally
+
+6. BookStorage.java
+   → storage.save(repository.getAll()) writes the full list to Books.json
+   → Throws StorageException (extends RuntimeException) on I/O failure
+
+7. LibraryAPI.java
+   → res.status(201) — 201 Created, not 200 OK
+   → Returns: {"success":true,"message":"Book Added Successfully","data":{...},"timestamp":...}
+```
+
+---
+
+## Key Design Decisions
+
+**`BookInput` vs `Book` (DTO pattern)**
+`BookInput` is what the client sends. `Book` is what the system stores. They are kept separate because a client should never be able to set an ID directly — the ID is always generated server-side by `BookIDGenerator`. `BookInput` is also reused for PATCH requests, where all fields are optional.
+
+**`Repository<T>` and `Storage<T>` interfaces**
+Both are generic interfaces. `Repository<T>` defines `add`, `remove`, `getAll`, `clear`. `Storage<T>` defines `save` and `load`. Using interfaces means the implementation can be swapped — e.g., replacing `BookStorage` with a database-backed implementation — without changing `LibraryManager`.
+
+**`BookIDGenerator` with `AtomicInteger`**
+IDs are generated using `AtomicInteger.getAndIncrement()`, which makes the read-and-increment a single atomic operation. This prevents duplicate IDs under concurrent requests. On startup, `LibraryManager` reads all existing books, finds the highest ID, and sets the counter to `maxId + 1` — so IDs never reset after a restart.
+
+**`Collections.unmodifiableList()` in `BookRepository`**
+`getAll()` returns a read-only view of the internal list. External callers cannot accidentally modify repository state by holding a reference to the list.
+
+**`StorageException` as an unchecked exception**
+`BookStorage` wraps `IOException` in a custom `StorageException extends RuntimeException`. This means callers don't have to declare `throws` everywhere, but file failures still bubble up with meaningful context rather than being swallowed.
+
+**PATCH only updates provided fields**
+In `LibraryManager.patchBook()`, each field is only updated if it is non-null and non-empty. A PATCH request with just `{"price": 12.99}` will update the price and leave title, author, and genre untouched.
+
+**Consistent response shape**
+Every successful response is wrapped in `ApiResponse<T>` (success, message, data, timestamp). Every error is wrapped in `ErrorResponse` (error, details, statusCode, timestamp). This consistency means clients always know what shape to expect regardless of which endpoint they hit.
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Status Codes | Description |
+|--------|----------|-------------|-------------|
+| `GET` | `/api/health` | 200 | Check if the API is running |
+| `GET` | `/api/books` | 200 | Get all books |
+| `GET` | `/api/books/:id` | 200, 404 | Get a single book by ID |
+| `POST` | `/api/books` | 201, 400 | Add a new book |
+| `PATCH` | `/api/books/:id` | 200, 400, 404 | Partially update a book |
+| `DELETE` | `/api/books/:id` | 200, 404 | Delete a book by ID |
+| `GET` | `/api/books/search?type=&value=` | 200, 400 | Search by author, title, genre, or price |
+| `GET` | `/api/books/budget?maxPrice=` | 200, 400 | Get books under a given price |
+| `GET` | `/api/books/sorted?by=` | 200 | Sort by title, author, genre, price, or id |
+| `GET` | `/api/books/stats` | 200 | Total books, total value, most expensive book |
+
+**Search types:** `author`, `title`, `genre`, `price` — all use partial/contains matching except price (exact match with float tolerance of `0.0001`).
+
+**Sort fields:** `title`, `author`, `genre`, `price`, `id` — defaults to `title` if no field is provided or the field is unrecognized.
+
+---
+
+## Requirements
+
+- Java 21 or higher
+- Maven
+- Internet connection on first build (Maven downloads dependencies)
+
+---
+
+## How to Run
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/library-api.git
+cd library-api
+
+# Build the project
+mvn clean compile
+
+# Start the server
+mvn exec:java
+```
+
+The API starts at `http://localhost:8080`. A `Books.json` file will be created automatically in the project root on the first write.
+
+---
+
+## Testing with cURL
+
+### Health check
+```bash
+curl http://localhost:8080/api/health
+```
+
+### Get all books
+```bash
+curl http://localhost:8080/api/books
+```
+
+### Add a new book
+```bash
+curl -X POST http://localhost:8080/api/books \
+  -H "Content-Type: application/json" \
+  -d '{"title":"1984","author":"Orwell","genre":"Fiction","price":15.99}'
+```
+
+### Get a book by ID
+```bash
+curl http://localhost:8080/api/books/0000
+```
+
+### Partially update a book
+```bash
+curl -X PATCH http://localhost:8080/api/books/0000 \
+  -H "Content-Type: application/json" \
+  -d '{"price":12.99}'
+```
+
+### Delete a book
+```bash
+curl -X DELETE http://localhost:8080/api/books/0000
+```
+
+### Search by author (partial match)
+```bash
+curl "http://localhost:8080/api/books/search?type=author&value=Orwell"
+```
+
+### Books within a budget
+```bash
+curl "http://localhost:8080/api/books/budget?maxPrice=20"
+```
+
+### Sorted books
+```bash
+curl "http://localhost:8080/api/books/sorted?by=price"
+```
+
+### Library stats
+```bash
+curl http://localhost:8080/api/books/stats
+```
+
+---
+
+## Running Tests
+
+```bash
+mvn test
+```
+
+Tests are written with JUnit 5 and cover:
+
+**`BookTest`** — verifies that `Book` validates its own fields on construction: empty title throws `IllegalArgumentException`, null author throws, negative price throws, zero price throws, and that two books created sequentially receive different IDs.
+
+**`BookIDGeneratorTest`** — verifies sequential generation, zero-padding format (`"0000"`, `"0001"`), correct behaviour past 4 digits (`"10000"`), resettable counter via `setNextId()`, and thread safety: 10 threads each generating 100 IDs concurrently with no duplicates, verified using `AtomicInteger`.
+
+---
+
+## Problems Encountered and How They Were Fixed
+
+| Problem | Cause | Fix |
+|---------|-------|-----|
+| Jackson couldn't deserialize `Book` from JSON | No default (no-arg) constructor | Added `public Book() {}` — Jackson requires it to instantiate the object before setting fields via setters |
+| IDs reset to `0000` after every restart | Counter always initialized to 0 | On startup, `LibraryManager` scans all loaded books, finds the max ID, and calls `BookIDGenerator.setNextId(maxId + 1)` |
+| Search returning no results | Using exact `.equals()` match | Switched to `.toLowerCase().contains(value)` for partial matching on author, title, and genre |
+| Empty `Books.json` caused a crash on load | Jackson failed to parse a zero-byte file | `BookStorage.load()` checks `filePath.length() == 0` and returns an empty list before attempting to read |
+| PATCH was overwriting fields with `null` | All fields were applied regardless of whether they were sent | Each field in `patchBook()` is only applied if non-null and non-empty |
+| Potential duplicate IDs under concurrent requests | Plain `int` counter with non-atomic read-then-increment | Replaced with `AtomicInteger.getAndIncrement()` — read and increment happen as one indivisible operation |
+
+---
+
+## License
+
+MIT — use it however you want.
+
+*First REST API. Built to understand the foundations before Spring Boot.*
